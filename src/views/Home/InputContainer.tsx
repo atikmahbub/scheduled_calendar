@@ -25,12 +25,13 @@ const InputContainer = ({
 }: Props) => {
   return (
     <Stack
-      direction="row"
+      direction={{ xs: "column", sm: "row" }}
       justifyContent="space-between"
       alignItems="center"
       mt={7}
+      spacing={2}
     >
-      <Stack direction="row" spacing={2} sx={{ width: "50%" }}>
+      <Stack direction="row" spacing={2} sx={{ width: "60%" }}>
         <SelectInput
           label="Month"
           name="month"

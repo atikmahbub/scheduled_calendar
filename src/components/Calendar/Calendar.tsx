@@ -14,6 +14,7 @@ import {
   HeaderCell,
 } from "./layouts";
 import Modal from "../Modal";
+import { getCurrentSchedules } from "../../helper/getCurrentSchedules";
 
 type Props = {
   year: string;
@@ -46,11 +47,7 @@ const Calendar = ({ year, month, schedules }: Props) => {
 
   const getCurrentDateSchedules = (date: string) => {
     if (schedules) {
-      const currentDateItems = schedules.filter(
-        (item) =>
-          moment(item.date).format("YYYY-MM-DD") ===
-          moment(date).format("YYYY-MM-DD")
-      );
+      let currentDateItems = getCurrentSchedules(schedules, date);
       return currentDateItems;
     } else return [];
   };
@@ -67,7 +64,12 @@ const Calendar = ({ year, month, schedules }: Props) => {
         header="Appointment Details"
         handleClose={() => setOpen(false)}
       >
-        <Stack direction="row" mt={3} justifyContent="space-between">
+        <Stack
+          direction="column"
+          spacing={1}
+          mt={3}
+          justifyContent="space-between"
+        >
           <Typography>Name: {itemDetails.name}</Typography>
           <Typography>Age: {itemDetails.age}</Typography>
           <Typography>Gender: {itemDetails.gender}</Typography>
