@@ -1,19 +1,22 @@
 import React, { Fragment, useEffect, useState } from "react";
-import Typography from "@mui/material/Typography";
 import Calendar from "../../components/Calendar";
 import InputContainer from "./InputContainer";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import Modal from "../../components/Modal";
 import CreateAppointment from "./CreateAppointment";
+import { addAppointment } from "../../features/appointmentSlice";
+import { useAppDispatch } from "../../app/hooks";
+import Header from "./Header";
 
 const Home = () => {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const dispatch = useAppDispatch();
   const [state, setState] = useState({
     month: moment().format("M"),
     year: moment().format("YYYY"),
   });
-  const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -35,6 +38,13 @@ const Home = () => {
       });
   }, [state, navigate]);
 
+  const onCreateAppointment = (data: any) => {
+    if (data) {
+      dispatch(addAppointment(data));
+    }
+    setOpen(false);
+  };
+
   return (
     <Fragment>
       <Modal
@@ -42,11 +52,9 @@ const Home = () => {
         header="Create Appointment"
         handleClose={() => setOpen(false)}
       >
-        <CreateAppointment />
+        <CreateAppointment onCreateAppointment={onCreateAppointment} />
       </Modal>
-      <Typography variant="h2" align="center">
-        Doctor Appointment
-      </Typography>
+      <Header />
       <InputContainer
         state={state}
         handleInputChange={handleInputChange}

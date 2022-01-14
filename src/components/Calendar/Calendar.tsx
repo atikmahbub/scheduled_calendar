@@ -58,10 +58,10 @@ const Calendar = ({ year, month }: Props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {calendar?.map((week: any) => (
-              <TableRow>
+            {calendar?.map((week: any, index: number) => (
+              <TableRow key={index}>
                 {week?.days?.map((day: any) => (
-                  <StyledTableCell>
+                  <StyledTableCell key={day}>
                     {day.format("D").toString()}
                   </StyledTableCell>
                 ))}
