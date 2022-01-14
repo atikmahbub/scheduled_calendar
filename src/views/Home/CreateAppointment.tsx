@@ -11,9 +11,13 @@ const genderList = ["Male", "Female", "Others"];
 
 type AppointmentProps = {
   onCreateAppointment: (data: any) => void;
+  handleClose: () => void;
 };
 
-const CreateAppointment = ({ onCreateAppointment }: AppointmentProps) => {
+const CreateAppointment = ({
+  onCreateAppointment,
+  handleClose,
+}: AppointmentProps) => {
   const {
     register,
     handleSubmit,
@@ -66,7 +70,12 @@ const CreateAppointment = ({ onCreateAppointment }: AppointmentProps) => {
         mt={3}
         spacing={2}
       >
-        <Button size="small" variant="outlined" color="secondary">
+        <Button
+          size="small"
+          variant="outlined"
+          color="secondary"
+          onClick={handleClose}
+        >
           Close
         </Button>
         <Button size="small" variant="contained" type="submit">

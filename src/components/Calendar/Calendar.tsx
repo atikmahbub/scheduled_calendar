@@ -1,37 +1,37 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import moment from "moment";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { styled } from "@mui/system";
 import { buildCalendar } from "../../helper/buildCalendar";
-
-const StyledTableCell = styled(TableCell)({
-  height: 150,
-  fontSize: 40,
-  padding: 10,
-  color: "gray",
-  border: "1px solid #e6e8eb",
-});
-
-const HeaderCell = styled(TableCell)({
-  fontSize: 24,
-  fontWeight: 500,
-  color: "#333",
-});
+import { Stack, Typography } from "@mui/material";
+import {
+  StyledContent,
+  StyledTableCell,
+  FixedDiv,
+  HeaderCell,
+} from "./layouts";
+import Modal from "../Modal";
 
 type Props = {
   year: string;
   month: string;
+  schedules: any[];
 };
+
 let weekDays = moment.weekdaysShort();
 
-const Calendar = ({ year, month }: Props) => {
+const Calendar = ({ year, month, schedules }: Props) => {
   const [calendar, setCalendar] = useState<any>([]);
   const [value, setValue] = useState({ year: "", month: "" });
+  const [open, setOpen] = useState(false);
+  const [itemDetails, setItemDetails] = useState({
+    name: "",
+    gender: "",
+    age: "",
+  });
 
   useEffect(() => {
     if (year && month) setValue({ year: year, month: month });
@@ -44,9 +44,36 @@ const Calendar = ({ year, month }: Props) => {
     }
   }, [value]);
 
+  const getCurrentDateSchedules = (date: string) => {
+    if (schedules) {
+      const currentDateItems = schedules.filter(
+        (item) =>
+          moment(item.date).format("YYYY-MM-DD") ===
+          moment(date).format("YYYY-MM-DD")
+      );
+      return currentDateItems;
+    } else return [];
+  };
+
+  const handleScheduleClick = (item: any) => {
+    setItemDetails(item);
+    setOpen(true);
+  };
+
   return (
-    <div style={{ marginTop: "50px" }}>
-      <TableContainer>
+    <Fragment>
+      <Modal
+        open={open}
+        header="Appointment Details"
+        handleClose={() => setOpen(false)}
+      >
+        <Stack direction="row" mt={3} justifyContent="space-between">
+          <Typography>Name: {itemDetails.name}</Typography>
+          <Typography>Age: {itemDetails.age}</Typography>
+          <Typography>Gender: {itemDetails.gender}</Typography>
+        </Stack>
+      </Modal>
+      <TableContainer sx={{ marginTop: "60px" }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -60,9 +87,21 @@ const Calendar = ({ year, month }: Props) => {
           <TableBody>
             {calendar?.map((week: any, index: number) => (
               <TableRow key={index}>
-                {week?.days?.map((day: any) => (
-                  <StyledTableCell key={day}>
-                    {day.format("D").toString()}
+                {week?.days?.map((day: any, i: number) => (
+                  <StyledTableCell key={i}>
+                    <FixedDiv>
+                      {day.format("D").toString()}
+                      <Stack fontSize={10} spacing={1}>
+                        {getCurrentDateSchedules(day)?.map((item) => (
+                          <StyledContent
+                            key={item}
+                            onClick={() => handleScheduleClick(item)}
+                          >
+                            {item.name} {moment(item.date).format("hh:mma")}
+                          </StyledContent>
+                        ))}
+                      </Stack>
+                    </FixedDiv>
                   </StyledTableCell>
                 ))}
               </TableRow>
@@ -70,7 +109,7 @@ const Calendar = ({ year, month }: Props) => {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </Fragment>
   );
 };
 

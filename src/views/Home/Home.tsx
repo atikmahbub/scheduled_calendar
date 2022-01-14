@@ -8,6 +8,7 @@ import CreateAppointment from "./CreateAppointment";
 import { addAppointment } from "../../features/appointmentSlice";
 import { useAppDispatch } from "../../app/hooks";
 import Header from "./Header";
+import useGetSchedules from "../../hooks/useGetSchedules";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ const Home = () => {
     month: moment().format("M"),
     year: moment().format("YYYY"),
   });
+  const { schedules } = useGetSchedules(state.month, state.year);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -26,9 +28,7 @@ const Home = () => {
     });
   };
 
-  const handleCreateAppointment = () => {
-    setOpen(true);
-  };
+  const handleCreateAppointment = () => setOpen(true);
 
   useEffect(() => {
     if (state.month && state.year)
@@ -39,9 +39,7 @@ const Home = () => {
   }, [state, navigate]);
 
   const onCreateAppointment = (data: any) => {
-    if (data) {
-      dispatch(addAppointment(data));
-    }
+    if (data) dispatch(addAppointment(data));
     setOpen(false);
   };
 
@@ -52,7 +50,10 @@ const Home = () => {
         header="Create Appointment"
         handleClose={() => setOpen(false)}
       >
-        <CreateAppointment onCreateAppointment={onCreateAppointment} />
+        <CreateAppointment
+          onCreateAppointment={onCreateAppointment}
+          handleClose={() => setOpen(false)}
+        />
       </Modal>
       <Header />
       <InputContainer
@@ -60,7 +61,7 @@ const Home = () => {
         handleInputChange={handleInputChange}
         handleCreateAppointment={handleCreateAppointment}
       />
-      <Calendar year={state.year} month={state.month} />
+      <Calendar year={state.year} month={state.month} schedules={schedules} />
     </Fragment>
   );
 };
