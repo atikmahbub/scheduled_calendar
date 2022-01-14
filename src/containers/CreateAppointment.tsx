@@ -1,5 +1,5 @@
 import { Button, Stack, styled, TextField } from "@mui/material";
-import SelectInput from "../../components/Select";
+import SelectInput from "../components/Select";
 import { useForm } from "react-hook-form";
 import MenuItem from "@mui/material/MenuItem";
 

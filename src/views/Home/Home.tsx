@@ -4,7 +4,7 @@ import InputContainer from "./InputContainer";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import Modal from "../../components/Modal";
-import CreateAppointment from "./CreateAppointment";
+import CreateAppointment from "../../containers/CreateAppointment";
 import { addAppointment } from "../../features/appointmentSlice";
 import { useAppDispatch } from "../../app/hooks";
 import Header from "./Header";
